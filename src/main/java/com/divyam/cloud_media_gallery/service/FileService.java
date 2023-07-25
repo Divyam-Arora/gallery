@@ -78,7 +78,7 @@ public class FileService {
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             ImageIO.write(scaledImg,file.getContentType().split("/")[1], output);
-            new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(inputStream.readAllBytes())).getExif().getOutputSet());
+            new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(new java.io.File(filePath))).getExif().getOutputSet());
             Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()).toPath(), output);
 //            ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
             fileObj.setHeight(img.getHeight());
