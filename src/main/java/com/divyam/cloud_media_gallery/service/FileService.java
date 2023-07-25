@@ -3,6 +3,11 @@ package com.divyam.cloud_media_gallery.service;
 import com.divyam.cloud_media_gallery.exception.NotAllowed;
 import com.divyam.cloud_media_gallery.model.File;
 import com.divyam.cloud_media_gallery.repo.FileRepo;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.Imaging;
+import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegLogCallback;
 import org.bytedeco.javacv.Frame;
@@ -15,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.Buffer;
@@ -33,7 +39,7 @@ public class FileService {
     @Value("${project.media}")
     private String path;
 
-    public File saveFile(MultipartFile file) throws IOException {
+    public File saveFile(MultipartFile file) throws IOException, ImageReadException, ImageWriteException {
         String[] mediaType = file.getContentType().split("/");
         if(mediaType[1].equals("x-matroska"))
             mediaType[1] = "mkv";
@@ -68,8 +74,13 @@ public class FileService {
 
         if(mediaType[0].toLowerCase(Locale.ROOT).equals("image")){
             BufferedImage img = ImageIO.read(new java.io.File(filePath)); // load image
-            BufferedImage scaledImg = Scalr.resize(img, Scalr.Mode.FIT_EXACT , 300);
-            ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
+            BufferedImage scaledImg = Scalr.resize(img, 300);
+
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ImageIO.write(scaledImg,file.getContentType().split("/")[1], output);
+            new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(inputStream.readAllBytes())).getExif().getOutputSet());
+            Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()).toPath(), output);
+//            ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
             fileObj.setHeight(img.getHeight());
             fileObj.setWidth(img.getWidth());
             img.flush();
