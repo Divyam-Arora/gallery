@@ -16,6 +16,7 @@ import org.imgscalr.Scalr;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -73,13 +74,18 @@ public class FileService {
 
 
         if(mediaType[0].toLowerCase(Locale.ROOT).equals("image")){
-            BufferedImage img = ImageIO.read(new java.io.File(filePath)); // load image
+            java.io.File imageFile = new java.io.File(filePath);
+            BufferedImage img = ImageIO.read(imageFile); // load image
             BufferedImage scaledImg = Scalr.resize(img, 300);
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
             ImageIO.write(scaledImg,file.getContentType().split("/")[1], output);
-            new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(new java.io.File(filePath))).getExif().getOutputSet());
-            Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()).toPath(), output);
+            System.out.println(imageFile.isFile());
+            if(Imaging.getMetadata(file.getBytes()) != null){
+                new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(file.getBytes())).getExif().getOutputSet());
+            }
+            FileCopyUtils.copy(output.toByteArray(), new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
+//            Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename())., output);
 //            ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
             fileObj.setHeight(img.getHeight());
             fileObj.setWidth(img.getWidth());

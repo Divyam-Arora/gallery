@@ -11,7 +11,7 @@ public class Helpers {
 
     public static String generateMediaURL(Media media){
         String url;
-        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().scheme("https").build().toUriString();
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().scheme("http").build().toUriString();
         url = baseUrl + "/api/public/media/" + media.getId() + "/";
 
         return url;
@@ -19,7 +19,7 @@ public class Helpers {
 
     public static String generateIconURL(Object id, String type){
         String url;
-        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().scheme("https").build().toUriString();
+        final String baseUrl = ServletUriComponentsBuilder.fromCurrentContextPath().scheme("http").build().toUriString();
         url = baseUrl + "/api/public/" + type + "/" + id + "/";
 
         return url;
