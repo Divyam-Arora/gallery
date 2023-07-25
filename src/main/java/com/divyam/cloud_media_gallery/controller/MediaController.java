@@ -9,6 +9,8 @@ import com.divyam.cloud_media_gallery.payload.response.MediaListItemResponse;
 import com.divyam.cloud_media_gallery.service.*;
 import com.divyam.cloud_media_gallery.util.Constants;
 import com.divyam.cloud_media_gallery.util.Helpers;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -48,7 +50,7 @@ public class MediaController {
     private String path;
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadMedia(MultipartFile[] media) throws IOException {
+    public ResponseEntity<?> uploadMedia(MultipartFile[] media) throws IOException, ImageWriteException, ImageReadException {
         List<MediaListItemResponse> response = new ArrayList<>();
         for (MultipartFile mediaItem : media) {
             if(!List.of("image", "video").contains(mediaItem.getContentType().split("/")[0])){

@@ -10,6 +10,8 @@ import com.divyam.cloud_media_gallery.payload.response.*;
 import com.divyam.cloud_media_gallery.repo.ConversationRepo;
 import com.divyam.cloud_media_gallery.repo.SharedRepo;
 import com.divyam.cloud_media_gallery.util.Helpers;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -149,7 +151,7 @@ public class UserService implements UserDetailsService {
     return userRepo.findByUsername(authentication.getPrincipal().toString());
   }
 
-  public User editUserIcon(MultipartFile file) throws IOException {
+  public User editUserIcon(MultipartFile file) throws IOException, ImageWriteException, ImageReadException {
     User user = loadUserFromContext();
     File icon = fileService.saveFile(file);
     user.setIcon(icon);

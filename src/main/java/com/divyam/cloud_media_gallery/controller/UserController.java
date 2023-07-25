@@ -15,6 +15,8 @@ import com.divyam.cloud_media_gallery.payload.response.UserDetailResponse;
 import com.divyam.cloud_media_gallery.payload.response.UserResponse;
 import com.divyam.cloud_media_gallery.service.ConversationService;
 import com.divyam.cloud_media_gallery.service.UserService;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,7 +87,7 @@ public class UserController {
   }
 
   @PostMapping("user/me/icon")
-  public ResponseEntity<?> editUserIcon(MultipartFile file) throws IOException {
+  public ResponseEntity<?> editUserIcon(MultipartFile file) throws IOException, ImageWriteException, ImageReadException {
     return ResponseEntity.ok(new UserResponse(userService.editUserIcon(file)));
   }
 

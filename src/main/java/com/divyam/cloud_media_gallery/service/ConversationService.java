@@ -8,6 +8,8 @@ import com.divyam.cloud_media_gallery.model.*;
 import com.divyam.cloud_media_gallery.payload.response.*;
 import com.divyam.cloud_media_gallery.repo.*;
 import com.divyam.cloud_media_gallery.util.Helpers;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -190,7 +192,7 @@ public class ConversationService {
 
     }
 
-    public ConversationResponse editConversationIcon(long conversationId, MultipartFile file, String path) throws IOException {
+    public ConversationResponse editConversationIcon(long conversationId, MultipartFile file, String path) throws IOException, ImageWriteException, ImageReadException {
         User currentUser = userService.loadUserFromContext();
         Conversation conversation = conversationRepo.findById(conversationId).orElseThrow(() -> new ResourceNotFoundException("Conversation","id",conversationId));
         if(!conversation.isGroup())

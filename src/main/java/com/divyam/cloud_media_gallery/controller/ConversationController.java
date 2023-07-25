@@ -9,6 +9,8 @@ import com.divyam.cloud_media_gallery.payload.response.SharedMediaResponse;
 import com.divyam.cloud_media_gallery.service.ConversationService;
 import com.divyam.cloud_media_gallery.service.MediaService;
 import com.divyam.cloud_media_gallery.service.ShareService;
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +58,7 @@ public class ConversationController {
     }
 
     @PostMapping("conversation/{conversationId}/icon")
-    public ResponseEntity<?> EditConversationIcon(@PathVariable Long conversationId, @RequestBody MultipartFile file) throws IOException {
+    public ResponseEntity<?> EditConversationIcon(@PathVariable Long conversationId, @RequestBody MultipartFile file) throws IOException, ImageWriteException, ImageReadException {
         return ResponseEntity.ok(conversationService.editConversationIcon(conversationId, file, path));
     }
 
