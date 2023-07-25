@@ -68,7 +68,7 @@ public class FileService {
 
         if(mediaType[0].toLowerCase(Locale.ROOT).equals("image")){
             BufferedImage img = ImageIO.read(new java.io.File(filePath)); // load image
-            BufferedImage scaledImg = Scalr.resize(img, 300);
+            BufferedImage scaledImg = Scalr.resize(img, Scalr.Mode.FIT_EXACT , 300);
             ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
             fileObj.setHeight(img.getHeight());
             fileObj.setWidth(img.getWidth());
