@@ -77,7 +77,7 @@ public class CloudMediaGalleryApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 //				registry.addMapping("/api/**").allowedOrigins("http://localhost:3000").allowedMethods("GET", "POST","PUT", "DELETE");
-				registry.addMapping("/api/**").allowedOrigins("https://gallery.up.railway.app").allowedMethods("GET", "POST","PUT", "DELETE");
+				registry.addMapping("/api/**").allowedOrigins("https://mygallerie.netlify.app").allowedMethods("GET", "POST","PUT", "DELETE");
 				;
 			}
 		};
