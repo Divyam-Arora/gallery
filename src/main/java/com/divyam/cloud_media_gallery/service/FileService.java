@@ -8,6 +8,9 @@ import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.Imaging;
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
+import org.apache.commons.imaging.formats.tiff.TiffImageMetadata;
+import org.apache.commons.imaging.formats.tiff.fieldtypes.FieldType;
+import org.apache.commons.imaging.formats.tiff.taginfos.TagInfo;
 import org.bytedeco.javacv.FFmpegFrameGrabber;
 import org.bytedeco.javacv.FFmpegLogCallback;
 import org.bytedeco.javacv.Frame;
@@ -78,14 +81,22 @@ public class FileService {
             BufferedImage img = ImageIO.read(imageFile); // load image
             BufferedImage scaledImg = Scalr.resize(img, 300);
 
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ImageIO.write(scaledImg,file.getContentType().split("/")[1], output);
+            ByteArrayOutputStream scaledStream = new ByteArrayOutputStream();
+            ByteArrayOutputStream scaledOutputStream = new ByteArrayOutputStream();
+            ImageIO.write(scaledImg,file.getContentType().split("/")[1], scaledStream);
             System.out.println(imageFile.isFile());
             if(Imaging.getMetadata(file.getBytes()) != null){
-                new ExifRewriter().updateExifMetadataLossless(output.toByteArray(),output,((JpegImageMetadata)Imaging.getMetadata(file.getBytes())).getExif().getOutputSet());
-            }
-            FileCopyUtils.copy(output.toByteArray(), new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
-//            Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename())., output);
+                TiffImageMetadata exif = ((JpegImageMetadata) Imaging.getMetadata(file.getBytes())).getExif();
+                System.out.println(exif.getAllFields());
+//                System.out.println(exif.getFieldValue(new TagInfo("Orientation", 274, FieldType.SHORT)));
+//                new ExifRewriter().removeExifMetadata(scaledStream.toByteArray(), scaledStream);
+                new ExifRewriter().updateExifMetadataLossless(scaledStream.toByteArray(),scaledOutputStream, exif.getOutputSet());
+                FileCopyUtils.copy(scaledOutputStream.toByteArray(), new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
+            } else
+                FileCopyUtils.copy(scaledStream.toByteArray(), new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
+            scaledStream.close();
+            scaledOutputStream.close();
+//            Files.copy(new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename())., scaledStream);
 //            ImageIO.write(scaledImg,file.getContentType().split("/")[1],new java.io.File(thumbFile.getPath()+ java.io.File.separator + file.getOriginalFilename()));
             fileObj.setHeight(img.getHeight());
             fileObj.setWidth(img.getWidth());
