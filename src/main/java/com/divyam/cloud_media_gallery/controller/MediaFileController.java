@@ -53,7 +53,7 @@ public class MediaFileController {
         byte[] stream = null;
         ResponseEntity.BodyBuilder builder = null;
         if(media.getFile().getContentType().toUpperCase(Locale.ROOT).equals("IMAGE")){
-            builder = ResponseEntity.ok();
+            builder = ResponseEntity.ok().cacheControl(CacheControl.maxAge(Duration.ofDays(1)));
             stream = inputStream.readAllBytes();
         } else{
 

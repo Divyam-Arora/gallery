@@ -4,6 +4,7 @@ import com.divyam.cloud_media_gallery.model.Media;
 import com.divyam.cloud_media_gallery.model.Role;
 import com.divyam.cloud_media_gallery.model.User;
 import com.divyam.cloud_media_gallery.repo.MediaRepo;
+import com.divyam.cloud_media_gallery.service.AllService;
 import com.divyam.cloud_media_gallery.service.MediaService;
 import com.divyam.cloud_media_gallery.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +37,7 @@ public class CloudMediaGalleryApplication {
 	}
 
 	 @Bean
-	 CommandLineRunner run(UserService userService, MediaRepo mediaRepo) {
+	 CommandLineRunner run(AllService allService) {
 	 return args -> {
 
 //		 if(userService.getUser("divyam") == null){
@@ -48,7 +49,7 @@ public class CloudMediaGalleryApplication {
 //
 //			 userService.addRoleToUser("divyam", "ROLE_ADMIN");
 //		 }
-
+		allService.wipeAllClean();
 		 File f = new File(path);
 		 if(!f.exists()){
 			 System.out.println(path);

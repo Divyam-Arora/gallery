@@ -30,7 +30,7 @@ public class Conversation extends DateAudit {
 
     private boolean isGroup;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH})
     @OrderBy("username asc")
     private Set<User> members;
 

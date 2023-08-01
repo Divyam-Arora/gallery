@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.divyam.cloud_media_gallery.model.User;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -31,4 +32,8 @@ public interface UserRepo extends JpaRepository<User, Long> {
   User find1MemberByConversation(long conversationId, long currentUser);
 
   List<User> findByUsernameIn(List<String> usernames);
+
+  @Modifying
+  @Query("update User set icon = null where id > 0")
+  void resetIcons();
 }
