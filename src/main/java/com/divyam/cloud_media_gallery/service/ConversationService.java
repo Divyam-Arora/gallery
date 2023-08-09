@@ -49,18 +49,18 @@ public class ConversationService {
     @Autowired
     FileService fileService;
 
-    public PageResponse<ConversationResponse> getAllConversationsByCurrentUser(int page, int size, int extra, String search, long recent){
+    public PageResponse<ConversationResponse> getAllConversationsByCurrentUser(int page, int size, int extra, String search, long recent, boolean active){
         User currentUser = userService.loadUserFromContext();
         search = Helpers.getSearchRegexpString(search);
         if(recent > 0){
             Instant milli = Instant.ofEpochMilli(recent);
-            List<Conversation> conversations= conversationRepo.findRecentConversationByMember(currentUser.getId(), search, milli);
+            List<Conversation> conversations= conversationRepo.findRecentConversationByMember(currentUser.getId(), search, milli, active ? 1: 0);
             PageResponse<ConversationResponse> response = new PageResponse<>();
             response.setResponse(conversations.stream().map(this::generateConversationResponse).collect(Collectors.toList()));
             return response;
         }
         page = Helpers.calculateNextPage(page,size,extra);
-        Page<Conversation> conversationPage = conversationRepo.findConversationsByMember(currentUser.getId(), search,PageRequest.of(page,size));
+        Page<Conversation> conversationPage = conversationRepo.findConversationsByMember(currentUser.getId(), search, active ? 1 : 0,PageRequest.of(page,size));
         List<ConversationResponse> conversationListResponse = new ArrayList<>();
         for(Conversation conversation: conversationPage.getContent()){
             conversationListResponse.add(generateConversationResponse(conversation));
@@ -110,7 +110,7 @@ public class ConversationService {
         User currentUser = userService.loadUserFromContext();
         Instant milli = Instant.ofEpochMilli(since);
         String searchString = Helpers.getSearchRegexpString(search);
-        List<Conversation> conversations = conversationRepo.findConversationsByMember(currentUser.getId(),searchString, PageRequest.of(0,100)).getContent();
+        List<Conversation> conversations = conversationRepo.findConversationsByMember(currentUser.getId(),searchString, 0,PageRequest.of(0,100)).getContent();
         List<Conversation> latestConversations = conversationActivityRepo.findAllUserConversationsByLatestActivity(conversations, milli);
 
         ConversationRecentActivityResponse response = new ConversationRecentActivityResponse();

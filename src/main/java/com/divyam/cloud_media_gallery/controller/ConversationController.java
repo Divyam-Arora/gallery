@@ -38,8 +38,8 @@ public class ConversationController {
     private String path;
 
     @GetMapping("conversation")
-    public ResponseEntity<?> getUserConversations(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "40") Integer size, @RequestParam(value = "extra", defaultValue = "0") Integer extra, @RequestParam(value = "search" , defaultValue = "") String search, @RequestParam(value = "recent", defaultValue = "0") long recent){
-        return ResponseEntity.ok(conversationService.getAllConversationsByCurrentUser(page,size,extra,search, recent));
+    public ResponseEntity<?> getUserConversations(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "size", defaultValue = "40") Integer size, @RequestParam(value = "extra", defaultValue = "0") Integer extra, @RequestParam(value = "search" , defaultValue = "") String search, @RequestParam(value = "recent", defaultValue = "0") long recent, @RequestParam(value = "active", defaultValue = "false") Boolean active){
+        return ResponseEntity.ok(conversationService.getAllConversationsByCurrentUser(page,size,extra,search, recent, active));
     }
 
     @GetMapping("conversation/{conversationId}")
