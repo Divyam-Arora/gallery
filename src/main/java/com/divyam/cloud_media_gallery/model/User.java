@@ -16,7 +16,7 @@ import lombok.*;
 @NamedNativeQuery(name = "User.getSharedMediaUsers", query = "select user.* from conversation_members as m inner join conversation as c on m.conversation_id = c.id inner join user on user.id = m.members_id where c.id in (select distinct conversation_id from conversation_members where members_id = ?1) and user.id != ?1 group by user.id order by c.updated_at desc", resultClass = User.class)
 public class User extends DateAudit implements Comparable<User>{
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String firstName;
   private String lastName;

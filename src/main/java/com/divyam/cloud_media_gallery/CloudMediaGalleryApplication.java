@@ -36,36 +36,37 @@ public class CloudMediaGalleryApplication {
 		SpringApplication.run(CloudMediaGalleryApplication.class, args);
 	}
 
-	 @Bean
-	 CommandLineRunner run(AllService allService) {
-	 return args -> {
-
-//		 if(userService.getUser("divyam") == null){
-//			 userService.saveRole(new Role(null, "ROLE_USER"));
-//			 userService.saveRole(new Role(null, "ROLE_ADMIN"));
+//	 @Bean
+//	 CommandLineRunner run(AllService allService, UserService userService) {
+//	 return args -> {
 //
-//			 userService.saveUser(new User(null, "Divyam", "Arora","divyamk.a.83@gmail.com", "divyam", "123",null, new
-//					 ArrayList<>()));
+////		 			 userService.saveRole(new Role(null, "ROLE_USER"));
+////			 userService.saveRole(new Role(null, "ROLE_ADMIN"));
 //
-//			 userService.addRoleToUser("divyam", "ROLE_ADMIN");
+////		 if(userService.getUser("divyam") == null){
+////
+////			 userService.saveUser(new User(null, "Divyam", "Arora","divyamk.a.83@gmail.com", "divyam", "123",null, new
+////					 ArrayList<>()));
+////
+////			 userService.addRoleToUser("divyam", "ROLE_ADMIN");
+////		 }
+//		allService.wipeAllClean();
+//		 File f = new File(path);
+//		 if(!f.exists()){
+//			 System.out.println(path);
+//			 System.out.println(f.mkdir());
 //		 }
-		allService.wipeAllClean();
-		 File f = new File(path);
-		 if(!f.exists()){
-			 System.out.println(path);
-			 System.out.println(f.mkdir());
-		 }
-
-//		 for(Media media : mediaRepo.findAll()){
-//			 Instant createdAt = media.getCreatedAt();
-//			 LocalDate date = LocalDate.ofInstant(createdAt,ZoneId.of("Asia/Kolkata"));
-//			 media.setDate(date.getDayOfMonth());
-//			 media.setMonth(date.getMonth().toString());
-//			 media.setYear(date.getYear());
-//			 mediaRepo.save(media);
-//		 }
-	 };
-	 }
+//
+////		 for(Media media : mediaRepo.findAll()){
+////			 Instant createdAt = media.getCreatedAt();
+////			 LocalDate date = LocalDate.ofInstant(createdAt,ZoneId.of("Asia/Kolkata"));
+////			 media.setDate(date.getDayOfMonth());
+////			 media.setMonth(date.getMonth().toString());
+////			 media.setYear(date.getYear());
+////			 mediaRepo.save(media);
+////		 }
+//	 };
+//	 }
 
 	@Bean
 	PasswordEncoder passwordEncoder() {
