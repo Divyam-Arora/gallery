@@ -47,7 +47,7 @@ public class FileService {
         String[] mediaType = file.getContentType().split("/");
         if(mediaType[1].equals("x-matroska"))
             mediaType[1] = "mkv";
-        System.out.println(file.getContentType());
+//        System.out.println(file.getContentType());
 
         if(mediaType[0].toLowerCase(Locale.ROOT).equals("image") && file.getSize() > 10 * 1024 * 1024){
             throw new NotAllowed("image size greater than 10MB");
@@ -84,10 +84,11 @@ public class FileService {
             ByteArrayOutputStream scaledStream = new ByteArrayOutputStream();
             ByteArrayOutputStream scaledOutputStream = new ByteArrayOutputStream();
             ImageIO.write(scaledImg,file.getContentType().split("/")[1], scaledStream);
-            System.out.println(imageFile.isFile());
-            if(Imaging.getMetadata(file.getBytes()) != null){
+//            System.out.println(imageFile.isFile());
+            JpegImageMetadata metadata = (JpegImageMetadata) Imaging.getMetadata(file.getBytes());
+            if(metadata != null && metadata.getExif() != null){
                 TiffImageMetadata exif = ((JpegImageMetadata) Imaging.getMetadata(file.getBytes())).getExif();
-                System.out.println(exif.getAllFields());
+//                System.out.println(exif.getAllFields());
 //                System.out.println(exif.getFieldValue(new TagInfo("Orientation", 274, FieldType.SHORT)));
 //                new ExifRewriter().removeExifMetadata(scaledStream.toByteArray(), scaledStream);
                 new ExifRewriter().updateExifMetadataLossless(scaledStream.toByteArray(),scaledOutputStream, exif.getOutputSet());
